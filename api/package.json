@@ -1,0 +1,40 @@
+{
+  "name": "stock-api",
+  "version": "1.0.0",
+  "description": "Stock API for Managing Products and Categories",
+  "main": "server.ts",
+  "scripts": {
+    "dev": "ts-node-dev --transpile-only src/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deyvidsalvatore/Mini-Stock-Control.git"
+  },
+  "keywords": [
+    "api",
+    "products",
+    "management"
+  ],
+  "author": "Deyvid Santos",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/deyvidsalvatore/Mini-Stock-Control/issues"
+  },
+  "homepage": "https://github.com/deyvidsalvatore/Mini-Stock-Control#readme",
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.21.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^5.21.1"
+  }
+}
