@@ -4,7 +4,7 @@ import UserService from "../services/user/user.service";
 import { AuthUserRequest } from "../models/user/auth-user.request";
 
 class UserController {
-    userService: UserService = new UserService();
+    private userService: UserService = new UserService();
 
     createUser = async (request: Request, response: Response) => {
         const { name, email, password }: CreateUserRequest = request.body;
