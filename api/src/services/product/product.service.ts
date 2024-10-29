@@ -2,8 +2,9 @@ import { CreateProductRequest } from "../../models/product/create-product.reques
 import { EditProductRequest } from "../../models/product/edit-product.request";
 import { SaleProductRequest } from "../../models/product/sale-product.request";
 import prismaClient from "../../prisma";
+import { AbstractProductService } from "./product.base";
 
-class ProductService {
+class ProductService extends AbstractProductService {
     async listProducts(): Promise<any[]> {
         const products = await prismaClient.product.findMany({
             select: {
