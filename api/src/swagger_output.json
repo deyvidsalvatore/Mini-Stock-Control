@@ -1,0 +1,326 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "v1.0.0",
+    "title": "Stock Management API",
+    "description": "API for managing users, categories, and products with TypeScript and Express.js"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "post": {
+        "summary": "Create User",
+        "description": "Creates a new user with name, email, and password.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully created"
+          },
+          "400": {
+            "description": "Invalid request data"
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "summary": "Authenticate User",
+        "description": "Authenticates a user and returns a bearer token upon successful login.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully"
+          },
+          "401": {
+            "description": "Authentication failed"
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "summary": "List Categories",
+        "description": "Retrieves a list of all categories.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized access"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Category",
+        "description": "Creates a new category with name and description.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category successfully created"
+          },
+          "400": {
+            "description": "Invalid request data"
+          },
+          "401": {
+            "description": "Unauthorized access"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Category",
+        "description": "Updates an existing category.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" },
+          { "$ref": "#/components/parameters/CategoryId" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category successfully updated"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Category",
+        "description": "Deletes a category by its ID.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" },
+          { "$ref": "#/components/parameters/CategoryId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category successfully deleted"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      }
+    },
+    "/product": {
+      "get": {
+        "summary": "List Products",
+        "description": "Retrieves a list of all available products.",
+        "responses": {
+          "200": {
+            "description": "List of products retrieved successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Product",
+        "description": "Creates a new product with specified details.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product successfully created"
+          },
+          "400": {
+            "description": "Invalid request data"
+          },
+          "401": {
+            "description": "Unauthorized access"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Product",
+        "description": "Updates an existing product.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" },
+          { "$ref": "#/components/parameters/ProductId" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product successfully updated"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Product",
+        "description": "Deletes a product by its ID.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" },
+          { "$ref": "#/components/parameters/ProductId" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product successfully deleted"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/product/sale": {
+      "post": {
+        "summary": "Process Product Sale",
+        "description": "Processes a sale for a specified product and amount.",
+        "parameters": [
+          { "$ref": "#/components/parameters/AuthHeader" }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Sale"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sale processed successfully"
+          },
+          "400": {
+            "description": "Invalid sale request"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "parameters": {
+      "AuthHeader": {
+        "name": "Authorization",
+        "in": "header",
+        "schema": { "type": "string" },
+        "description": "Bearer token for authorization"
+      },
+      "CategoryId": {
+        "name": "category_id",
+        "in": "query",
+        "schema": { "type": "string" },
+        "description": "ID of the category"
+      },
+      "ProductId": {
+        "name": "product_id",
+        "in": "query",
+        "schema": { "type": "string" },
+        "description": "ID of the product"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" }
+        },
+        "required": ["name", "description"]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "price": { "type": "number" },
+          "description": { "type": "string" },
+          "amount": { "type": "number" },
+          "category_id": { "type": "string" }
+        },
+        "required": ["name", "price", "description", "amount", "category_id"]
+      },
+      "Sale": {
+        "type": "object",
+        "properties": {
+          "product_id": { "type": "string" },
+          "amount": { "type": "number" }
+        },
+        "required": ["product_id", "amount"]
+      }
+    }
+  }
+}
