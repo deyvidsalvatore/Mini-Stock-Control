@@ -7,6 +7,7 @@ import { LoginFormComponent } from './shared/login-form/login-form.component';
 import { DynamicFormComponent } from "../../shared/dynamic-form/dynamic-form.component";
 import { CardModule } from 'primeng/card';
 import { SignupFormComponent } from './shared/signup-form/signup-form.component';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { SignupFormComponent } from './shared/signup-form/signup-form.component'
     CommonModule,
     HomeRoutingModule,
     DynamicFormComponent,
-    CardModule
+    CardModule,
+    ToastModule
   ]
 })
 export class HomeModule { }
