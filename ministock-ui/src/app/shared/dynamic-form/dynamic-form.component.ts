@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { QuestionBase } from '../generics/questions/question-base.generic';
 import { QuestionControlService } from '../services/question-control.service';
@@ -19,12 +19,10 @@ import { MessageService } from 'primeng/api';
 })
 export class DynamicFormComponent implements OnInit {
   @Input() questions: QuestionBase<string>[] | null = [];
+  @Output() formSubmitted = new EventEmitter<any>();
   form!: FormGroup;
-  payLoad = '';
-  myQcs!: QuestionControlService;
 
-  constructor(private qcs: QuestionControlService, private messageService: MessageService) {
-  }
+  constructor(private qcs: QuestionControlService, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.form = this.qcs.toFormGroup(this.questions as QuestionBase<string>[]);
@@ -32,8 +30,10 @@ export class DynamicFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.payLoad = JSON.stringify(this.form.getRawValue());
-      this.showSuccessToast(`Data was saved successfully!`);
+      const formData = this.form.getRawValue();
+      this.formSubmitted.emit(formData);
+      this.showSuccessToast('Data was saved successfully!');
+      this.form.reset();
     } else {
       this.showErrorToast('An error happened, check the fields!');
     }

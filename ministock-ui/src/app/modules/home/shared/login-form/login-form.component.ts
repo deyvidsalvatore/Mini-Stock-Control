@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { QuestionBase } from '../../../../shared/generics/questions/question-base.generic';
 import { TextboxQuestion } from '../../../../shared/generics/questions/question-textbox';
 import { MessageService } from 'primeng/api';
+import { UserService } from '../../../../core/services/user.service';
 
 @Component({
   selector: 'app-login-form',
@@ -12,8 +13,12 @@ import { MessageService } from 'primeng/api';
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
 
-  questions: QuestionBase<string>[] = [];
+  private _userService: UserService = inject(UserService);
   private destroy$ = new Subject<void>();
+
+  questions: QuestionBase<string>[] = [];
+
+  constructor(private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.loginQuestions();
@@ -36,6 +41,27 @@ export class LoginFormComponent implements OnInit, OnDestroy {
         order: 2,
       }),
     ];
+  }
+
+  onSubmit(formData: any): void {
+    this._userService.authUser(formData).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Login Successful',
+          detail: 'You have successfully logged in!',
+          life: 2000
+        });
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Login Failed',
+          detail: 'Please check your credentials and try again.',
+          life: 2000
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {

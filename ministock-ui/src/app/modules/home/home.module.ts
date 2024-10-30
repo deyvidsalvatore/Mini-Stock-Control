@@ -20,6 +20,6 @@ import { SignupFormComponent } from './shared/signup-form/signup-form.component'
     HomeRoutingModule,
     DynamicFormComponent,
     CardModule
-]
+  ]
 })
 export class HomeModule { }
