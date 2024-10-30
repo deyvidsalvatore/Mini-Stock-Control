@@ -7,6 +7,7 @@ import { DynamicFormQuestionComponent } from './dynamic-form-question/dynamic-fo
 
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -14,7 +15,7 @@ import { ToastModule } from 'primeng/toast';
   styleUrl: './dynamic-form.component.scss',
   standalone: true,
   imports: [CommonModule, DynamicFormQuestionComponent, ReactiveFormsModule, ButtonModule, ToastModule],
-  providers: [QuestionControlService]
+  providers: [QuestionControlService, MessageService]
 })
 export class DynamicFormComponent implements OnInit {
   @Input() questions: QuestionBase<string>[] | null = [];
@@ -22,7 +23,7 @@ export class DynamicFormComponent implements OnInit {
   payLoad = '';
   myQcs!: QuestionControlService;
 
-  constructor(private qcs: QuestionControlService) {
+  constructor(private qcs: QuestionControlService, private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -30,7 +31,29 @@ export class DynamicFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.payLoad = JSON.stringify(this.form.getRawValue());
+    if (this.form.valid) {
+      this.payLoad = JSON.stringify(this.form.getRawValue());
+      this.showSuccessToast(`Data was saved successfully!`);
+    } else {
+      this.showErrorToast('An error happened, check the fields!');
+    }
   }
 
+  showSuccessToast(detail: string): void {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail,
+      life: 2000
+    });
+  }
+
+  showErrorToast(detail: string): void {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail,
+      life: 2000
+    });
+  }
 }

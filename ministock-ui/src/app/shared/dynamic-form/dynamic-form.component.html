@@ -1,4 +1,5 @@
 <div>
+  <p-toast></p-toast>
   <form (ngSubmit)="onSubmit()" [formGroup]="form">
     @for (question of questions; track question) {
       <div class="form-row">
@@ -10,15 +11,11 @@
       <button
         pButton
         type="submit"
-        label="Save"
+        label="Send"
         [disabled]="!form.valid"
         icon="pi pi-check"
         class="p-button-primary"
       ></button>
     </div>
   </form>
-
-  @if (payLoad) {
-    <p-toast></p-toast>
-  }
 </div>
