@@ -5,12 +5,15 @@ import { QuestionBase } from '../generics/questions/question-base.generic';
 import { QuestionControlService } from '../services/question-control.service';
 import { DynamicFormQuestionComponent } from './dynamic-form-question/dynamic-form-question.component';
 
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+
 @Component({
   selector: 'app-dynamic-form',
   templateUrl: './dynamic-form.component.html',
   styleUrl: './dynamic-form.component.scss',
   standalone: true,
-  imports: [CommonModule, DynamicFormQuestionComponent, ReactiveFormsModule],
+  imports: [CommonModule, DynamicFormQuestionComponent, ReactiveFormsModule, ButtonModule, ToastModule],
   providers: [QuestionControlService]
 })
 export class DynamicFormComponent implements OnInit {

@@ -5,13 +5,20 @@
         <app-question [question]="question" [form]="form"></app-question>
       </div>
     }
-    <div class="form-row">
-      <button type="submit" [disabled]="!form.valid">Save</button>
+
+    <div class="form-row myButton">
+      <button
+        pButton
+        type="submit"
+        label="Save"
+        [disabled]="!form.valid"
+        icon="pi pi-check"
+        class="p-button-primary"
+      ></button>
     </div>
   </form>
+
   @if (payLoad) {
-    <div class="form-row">
-      <strong>Saved the following values</strong><br>{{ payLoad }}
-    </div>
+    <p-toast></p-toast>
   }
 </div>
