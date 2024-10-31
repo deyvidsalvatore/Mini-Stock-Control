@@ -40,6 +40,6 @@ export class UserService {
   }
 
   isLoggedIn(): boolean {
-    return this.cookie.get('USER_INFO') != null;
+    return this.cookie.check('USER_INFO');
   }
 }

@@ -5,7 +5,8 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ToolbarModule } from 'primeng/toolbar';
 import { DialogService } from 'primeng/dynamicdialog';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-toolbar-navigation',
@@ -24,5 +25,11 @@ import { RouterModule } from '@angular/router';
   providers: [DialogService, CurrencyPipe]
 })
 export class ToolbarNavigationComponent {
+  constructor(private cookie: CookieService, private router: Router) {
+  }
 
+  handleLogout(): void {
+    this.cookie.delete('USER_INFO');
+    this.router.navigate(['/auth/login']);
+  }
 }
