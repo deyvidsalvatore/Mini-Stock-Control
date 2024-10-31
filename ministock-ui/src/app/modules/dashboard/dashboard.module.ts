@@ -10,6 +10,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { ChartModule } from 'primeng/chart';
+import { ToolbarNavigationComponent } from '../../shared/toolbar-navigation/toolbar-navigation.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { ChartModule } from 'primeng/chart';
     ToolbarModule,
     CardModule,
     ToastModule,
-    ChartModule
+    ChartModule,
+    ToolbarNavigationComponent
   ]
 })
 export class DashboardModule { }
