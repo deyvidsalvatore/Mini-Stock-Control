@@ -4,6 +4,7 @@ import { QuestionBase } from '../../../../shared/generics/questions/question-bas
 import { TextboxQuestion } from '../../../../shared/generics/questions/question-textbox';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../../../core/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup-form',
@@ -17,7 +18,7 @@ export class SignupFormComponent implements OnInit, OnDestroy {
 
   questions: QuestionBase<string>[] = [];
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService, private router: Router) {}
 
   ngOnInit(): void {
     this.loginQuestions();
@@ -52,6 +53,7 @@ export class SignupFormComponent implements OnInit, OnDestroy {
   onSubmit(formData: any): void {
     this._userService.signupUser(formData).subscribe({
       next: () => {
+        this.router.navigate(['/auth', '/login'])
         this.messageService.add({
           severity: 'success',
           summary: 'Sign Up Successful',

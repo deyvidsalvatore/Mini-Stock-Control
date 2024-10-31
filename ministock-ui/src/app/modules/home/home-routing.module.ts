@@ -7,7 +7,7 @@ import { SignupFormComponent } from './shared/signup-form/signup-form.component'
 const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   {
-    path: 'auth',
+    path: '',
     children: [
       { path: 'login', component: LoginFormComponent },
       { path: 'signup', component: SignupFormComponent },

@@ -6,6 +6,7 @@ import { catchError, Observable, take, throwError } from 'rxjs';
 import { ISignupUserResponse } from '../../shared/interfaces/signup-user.response';
 import { IAuthRequest } from '../../shared/interfaces/auth.request';
 import { IAuthResponse } from '../../shared/interfaces/auth.response';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ import { IAuthResponse } from '../../shared/interfaces/auth.response';
 export class UserService {
   private API_URL = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cookie: CookieService) {}
 
   signupUser(signupData: ISignupUserRequest): Observable<ISignupUserResponse> {
     return this.http
@@ -36,5 +37,9 @@ export class UserService {
     }
     console.error(err);
     return throwError(() => errorMessage);
+  }
+
+  isLoggedIn(): boolean {
+    return this.cookie.get('USER_INFO') != null;
   }
 }
