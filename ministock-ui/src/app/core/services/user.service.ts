@@ -1,11 +1,11 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { ISignupUserRequest } from '../../shared/interfaces/signup-user.request';
+import { ISignupUserRequest } from '../../shared/interfaces/user/requests/signup-user.request';
 import { catchError, Observable, take, throwError } from 'rxjs';
-import { ISignupUserResponse } from '../../shared/interfaces/signup-user.response';
-import { IAuthRequest } from '../../shared/interfaces/auth.request';
-import { IAuthResponse } from '../../shared/interfaces/auth.response';
+import { ISignupUserResponse } from '../../shared/interfaces/user/responses/signup-user.response';
+import { IAuthRequest } from '../../shared/interfaces/user/requests/auth.request';
+import { IAuthResponse } from '../../shared/interfaces/user/responses/auth.response';
 import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
