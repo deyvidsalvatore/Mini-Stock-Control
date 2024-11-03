@@ -1,6 +1,6 @@
 import { CookieService } from 'ngx-cookie-service';
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { QuestionBase } from '../../../../shared/generics/questions/question-base.generic';
 import { TextboxQuestion } from '../../../../shared/generics/questions/question-textbox';
 import { MessageService } from 'primeng/api';
@@ -49,7 +49,11 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(formData: any): void {
-    this._userService.authUser(formData).subscribe({
+    this._userService.authUser(formData)
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
       next: (response) => {
         this.cookieService.set('USER_INFO', response?.token);
         this.router.navigate(['/dashboard']);

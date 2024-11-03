@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { QuestionBase } from '../../../../shared/generics/questions/question-base.generic';
 import { TextboxQuestion } from '../../../../shared/generics/questions/question-textbox';
 import { MessageService } from 'primeng/api';
@@ -51,7 +51,11 @@ export class SignupFormComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(formData: any): void {
-    this._userService.signupUser(formData).subscribe({
+    this._userService.signupUser(formData)
+    .pipe(
+      takeUntil(this.destroy$)
+    )
+    .subscribe({
       next: () => {
         this.router.navigate(['/auth', '/login'])
         this.messageService.add({
