@@ -19,6 +19,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToolbarNavigationComponent } from "../../shared/toolbar-navigation/toolbar-navigation.component";
+import { ProductsTableComponent } from './products-table/products-table.component';
 
 const PRIMENG_MODULES = [
   CardModule,
@@ -37,7 +38,8 @@ const PRIMENG_MODULES = [
 
 @NgModule({
   declarations: [
-    ProductsComponent
+    ProductsComponent,
+    ProductsTableComponent
   ],
   imports: [
     CommonModule,
