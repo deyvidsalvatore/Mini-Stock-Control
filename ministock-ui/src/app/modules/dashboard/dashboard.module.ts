@@ -11,6 +11,8 @@ import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { ChartModule } from 'primeng/chart';
 import { ToolbarNavigationComponent } from '../../shared/toolbar-navigation/toolbar-navigation.component';
+import { MessageService } from 'primeng/api';
+import { ProductsService } from '../../core/services/products.service';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { ToolbarNavigationComponent } from '../../shared/toolbar-navigation/tool
     ToastModule,
     ChartModule,
     ToolbarNavigationComponent
-  ]
+  ],
+  providers: [ProductsService, MessageService]
 })
 export class DashboardModule { }
