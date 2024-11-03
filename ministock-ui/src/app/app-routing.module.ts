@@ -5,8 +5,8 @@ import { AuthGuard } from './core/guards/auth.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo:'dashboard',
-    pathMatch: 'full'
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
   },
   {
     path: 'auth',
@@ -18,6 +18,14 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/dashboard/dashboard.module').then(
         (m) => m.DashboardModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'products',
+    loadChildren: () =>
+      import('./modules/products/products.module').then(
+        (m) => m.ProductsModule
       ),
     canActivate: [AuthGuard]
   },
