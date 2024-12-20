@@ -5,6 +5,7 @@ import { ProductDataTransferService } from '../../shared/services/products-data-
 import { Router } from '@angular/router';
 import { IAllProductsResponse } from '../../shared/interfaces/products/responses/all-products.response';
 import { MessageService } from 'primeng/api';
+import { EventAction } from '../../shared/interfaces/products/event-actions';
 
 @Component({
   selector: 'app-products',
@@ -62,6 +63,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
       }
     },
   );
+  }
+
+  handleProductAction(event: EventAction): void {
+    if (event) {
+      console.log('Receive event data', event);
+    }
+
   }
 
 }

@@ -128,6 +128,7 @@
                   label="Add"
                   pTooltip="Add Product"
                   tooltipPosition="top"
+                  (onClick)="handleProductEvent(addProductEvent)"
                 ></p-button>
               </div>
             </th>
@@ -154,6 +155,7 @@
                   class="p-button-rounded p-button-warning"
                   pTooltip="Edit Product"
                   tooltipPosition="top"
+                  (click)="handleProductEvent(editProductEvent, product?.id)"
                 ></button>
                 <button
                   pButton
