@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../../environments/environment';
 import { catchError, map, Observable, take, throwError } from 'rxjs';
 import { IAllProductsResponse } from '../../shared/interfaces/products/responses/all-products.response';
+import { DeleteProductResponse } from '../../shared/interfaces/products/responses/delete-product.response';
 
 @Injectable({
   providedIn: 'root',
@@ -28,12 +29,23 @@ export class ProductsService {
     return this.http
       .get<IAllProductsResponse[]>(`${this.API_URL}/product`, this.HTTP_OPTIONS)
       .pipe(
-        map(products => products.filter(data => data.amount > 0)),
+        map((products) => products.filter((data) => data.amount > 0)),
         take(1),
         catchError(this.handleError)
       );
   }
-  
+
+  deleteProduct(productId: string): Observable<DeleteProductResponse> {
+    return this.http
+      .delete<DeleteProductResponse>(`${this.API_URL}/product`, {
+        ...this.HTTP_OPTIONS,
+        params: {
+          product_id: productId,
+        },
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   private handleError(err: HttpErrorResponse): Observable<never> {
     let errorMessage: string;
     if (err.error instanceof ErrorEvent) {

@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToolbarNavigationComponent } from "../../shared/toolbar-navigation/toolbar-navigation.component";
 import { ProductsTableComponent } from './products-table/products-table.component';
+import { ToastModule } from 'primeng/toast';
 
 const PRIMENG_MODULES = [
   CardModule,
@@ -33,7 +34,8 @@ const PRIMENG_MODULES = [
   DynamicDialogModule,
   DropdownModule,
   ConfirmDialogModule,
-  TooltipModule
+  TooltipModule,
+  ToastModule
 ];
 
 @NgModule({

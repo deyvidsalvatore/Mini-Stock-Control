@@ -10,7 +10,6 @@ import { ToolbarNavigationComponent } from './toolbar-navigation/toolbar-navigat
 
 @NgModule({
   declarations: [
-    ToolbarNavigationComponent
   ],
   imports: [
     CommonModule,
@@ -18,6 +17,7 @@ import { ToolbarNavigationComponent } from './toolbar-navigation/toolbar-navigat
     RouterModule,
     ToolbarModule,
     CardModule,
+    ToolbarNavigationComponent,
     ButtonModule
   ],
   providers: [DialogService, CurrencyPipe]
