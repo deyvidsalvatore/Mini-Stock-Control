@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { IAllProductsResponse } from '../../shared/interfaces/products/responses/all-products.response';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { EventAction } from '../../shared/interfaces/products/event-actions';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ProductFormComponent } from './product-form/product-form.component';
 
 @Component({
   selector: 'app-products',
@@ -14,6 +16,7 @@ import { EventAction } from '../../shared/interfaces/products/event-actions';
 })
 export class ProductsComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject<void>();
+  public ref!: DynamicDialogRef;
   public productsData!: Array<IAllProductsResponse>;
 
   constructor(
@@ -21,7 +24,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
     private productsDtService: ProductDataTransferService,
     private router: Router,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -53,11 +57,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
             this.productsData = response;
           }
         },
-        error: (err) => {
+        error: (err: Error) => {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Error on searching products',
+            detail: err.message,
             life: 2500,
           });
           this.router.navigate(['/dashboard']);
@@ -67,7 +71,22 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   handleProductAction(event: EventAction): void {
     if (event) {
-      console.log('Receive event data', event);
+      this.ref = this.dialogService.open(ProductFormComponent, {
+        header: event?.action,
+        width: '70%',
+        contentStyle: { overflow: 'auto'},
+        baseZIndex: 10000,
+        maximizable: true,
+        data: {
+          event: event,
+          productsData: this.productsData
+        },
+      });
+
+      this.ref.onClose
+        .pipe(takeUntil(this.destroy$)).subscribe({
+          next: () => this.getAPIProductsData(),
+        });
     }
   }
 

@@ -9,6 +9,8 @@ import { environment } from '../../../environments/environment';
 import { catchError, map, Observable, take, throwError } from 'rxjs';
 import { IAllProductsResponse } from '../../shared/interfaces/products/responses/all-products.response';
 import { DeleteProductResponse } from '../../shared/interfaces/products/responses/delete-product.response';
+import { CreateProductRequest } from '../../shared/interfaces/products/requests/create-product.request';
+import { CreateProductResponse } from '../../shared/interfaces/products/responses/create-product.response';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +37,14 @@ export class ProductsService {
       );
   }
 
+  createProduct(createProductRequest: CreateProductRequest): Observable<CreateProductResponse> {
+    return this.http
+      .post<CreateProductResponse>(`${this.API_URL}/product`, createProductRequest, this.HTTP_OPTIONS)
+      .pipe(
+        take(1),
+        catchError(this.handleError)
+      );
+  }
   deleteProduct(productId: string): Observable<DeleteProductResponse> {
     return this.http
       .delete<DeleteProductResponse>(`${this.API_URL}/product`, {

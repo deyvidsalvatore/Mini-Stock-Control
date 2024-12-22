@@ -21,6 +21,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToolbarNavigationComponent } from "../../shared/toolbar-navigation/toolbar-navigation.component";
 import { ProductsTableComponent } from './products-table/products-table.component';
 import { ToastModule } from 'primeng/toast';
+import { ProductFormComponent } from './product-form/product-form.component';
 
 const PRIMENG_MODULES = [
   CardModule,
@@ -41,7 +42,8 @@ const PRIMENG_MODULES = [
 @NgModule({
   declarations: [
     ProductsComponent,
-    ProductsTableComponent
+    ProductsTableComponent,
+    ProductFormComponent
   ],
   imports: [
     CommonModule,
