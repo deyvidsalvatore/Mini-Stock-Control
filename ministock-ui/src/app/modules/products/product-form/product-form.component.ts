@@ -7,67 +7,104 @@ import { Router } from '@angular/router';
 import { AllCategoriesResponse } from '../../../shared/interfaces/products/responses/all-categories.response';
 import { CreateProductRequest } from '../../../shared/interfaces/products/requests/create-product.request';
 import { ProductsService } from '../../../core/services/products.service';
+import { EventAction } from '../../../shared/interfaces/products/event-actions';
+import { IAllProductsResponse } from '../../../shared/interfaces/products/responses/all-products.response';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { ProductDataTransferService } from '../../../shared/services/products-data-transfer.service';
+import { ProductEvent } from '../../../shared/enums/products/product.event';
+import { EditProductRequest } from '../../../shared/interfaces/products/requests/edit-product.request';
 
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
-  styleUrl: './product-form.component.scss',
+  styleUrls: [],
 })
 export class ProductFormComponent implements OnInit, OnDestroy {
-  private readonly destroy$: Subject<void> = new Subject<void>();
-  public categories: AllCategoriesResponse[] = [];
-  public selectedCategory: Array<{name: string, code: string}> = [];
+  private readonly destroy$: Subject<void> = new Subject();
+  public categoriesDatas: Array<AllCategoriesResponse> = [];
+  public selectedCategory: Array<{ name: string; code: string }> = [];
+  public productAction!: {
+    event: EventAction;
+    productDatas: Array<IAllProductsResponse>;
+  };
+  public productSelectedDatas!: IAllProductsResponse;
+  public productsDatas: Array<IAllProductsResponse> = [];
+  public addProductForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    price: ['', Validators.required],
+    description: ['', Validators.required],
+    category_id: ['', Validators.required],
+    amount: [0, Validators.required],
+  });
+  public editProductForm = this.formBuilder.group({
+    name: ['', Validators.required],
+    price: ['', Validators.required],
+    description: ['', Validators.required],
+    amount: [0, Validators.required],
+  });
+
+  public addProductAction = ProductEvent.ADD_PRODUCT_EVENT;
+  public editProductAction = ProductEvent.EDIT_PRODUCT_EVENT;
+  public saleProductAction = ProductEvent.SALE_PRODUCT_EVENT;
 
   constructor(
     private categoriesService: CategoriesService,
-    private fb: FormBuilder,
-    private productService: ProductsService,
+    private productsService: ProductsService,
+    private productsDtService: ProductDataTransferService,
+    private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    public ref: DynamicDialogConfig
   ) {}
 
   ngOnInit(): void {
+    this.productAction = this.ref.data;
+
+    if (this.productAction?.event?.action === this.editProductAction) {
+      this.getProductSelectedDatas(this.ref.data.event.id);
+    }
+
+    this.productAction?.event?.action === this.saleProductAction &&
+      this.getProductDatas();
+
     this.getAllCategories();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  getAllCategories() {
+  getAllCategories(): void {
     this.categoriesService
       .getAllCategories()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response.length > 0) {
-            this.categories = response;
+            this.categoriesDatas = response;
           }
         },
       });
   }
 
   handleSubmitAddProduct(): void {
-    if(this.addProductForm?.value && this.addProductForm?.valid) {
+    if (this.addProductForm?.value && this.addProductForm?.valid) {
       const requestCreateProduct: CreateProductRequest = {
         name: this.addProductForm.value.name as string,
         price: this.addProductForm.value.price as string,
         description: this.addProductForm.value.description as string,
         category_id: this.addProductForm.value.category_id as string,
-        amount: this.addProductForm.value.amount as number
+        amount: Number(this.addProductForm.value.amount),
       };
-      this.productService.createProduct(requestCreateProduct)
+
+      this.productsService
+        .createProduct(requestCreateProduct)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
             if (response) {
               this.messageService.add({
                 severity: 'success',
-                summary: 'Success',
-                detail: 'Product created successfully!',
-                life: 1500
-              })
+                summary: 'Sucesso',
+                detail: 'Produto criado com sucesso!',
+                life: 2500,
+              });
               this.router.navigate(['/products']);
             }
           },
@@ -76,21 +113,96 @@ export class ProductFormComponent implements OnInit, OnDestroy {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: 'An error has occurred!',
-              life: 1500
-            })
-          }
-        })
+              detail: 'Error on create product',
+              life: 2500,
+            });
+          },
+        });
     }
 
     this.addProductForm.reset();
   }
 
-  public addProductForm = this.fb.group({
-    name: ['', Validators.required],
-    price: ['', Validators.required],
-    description: ['', Validators.required],
-    category_id: ['', Validators.required],
-    amount: [0, Validators.required],
-  });
+  handleSubmitEditProduct(): void {
+    if (
+      this.editProductForm.value &&
+      this.editProductForm.valid &&
+      this.productAction.event.id
+    ) {
+      const requestEditProduct: EditProductRequest = {
+        name: this.editProductForm.value.name as string,
+        price: this.editProductForm.value.price as string,
+        description: this.editProductForm.value.description as string,
+        product_id: this.productAction?.event?.id,
+        amount: this.editProductForm.value.amount as number,
+      };
+
+      this.productsService
+        .editProduct(requestEditProduct)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Product edited successfully!',
+              life: 2500,
+            });
+            this.editProductForm.reset();
+            this.router.navigate(['/products']);
+          },
+          error: (err) => {
+            console.log(err);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Erro on editing the product',
+              life: 2500,
+            });
+            this.editProductForm.reset();
+          },
+        });
+    }
+  }
+
+  getProductSelectedDatas(productId: string): void {
+    const allProducts = this.ref.data.productsData;
+
+    if (allProducts) {
+      const productFiltered = allProducts.filter(
+        (element: any) => element?.id === productId
+      );
+
+      if (productFiltered) {
+        this.productSelectedDatas = productFiltered[0];
+
+        this.editProductForm.setValue({
+          name: this.productSelectedDatas?.name,
+          price: this.productSelectedDatas?.price,
+          amount: this.productSelectedDatas?.amount,
+          description: this.productSelectedDatas?.description,
+        });
+      }
+    }
+  }
+
+  getProductDatas(): void {
+    this.productsService
+      .getAllProducts()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response.length > 0) {
+            this.productsDatas = response;
+            this.productsDatas &&
+              this.productsDtService.setProductsDatas(this.productsDatas);
+          }
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

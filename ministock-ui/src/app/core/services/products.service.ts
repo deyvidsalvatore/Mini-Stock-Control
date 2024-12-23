@@ -11,6 +11,7 @@ import { IAllProductsResponse } from '../../shared/interfaces/products/responses
 import { DeleteProductResponse } from '../../shared/interfaces/products/responses/delete-product.response';
 import { CreateProductRequest } from '../../shared/interfaces/products/requests/create-product.request';
 import { CreateProductResponse } from '../../shared/interfaces/products/responses/create-product.response';
+import { EditProductRequest } from '../../shared/interfaces/products/requests/edit-product.request';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +41,15 @@ export class ProductsService {
   createProduct(createProductRequest: CreateProductRequest): Observable<CreateProductResponse> {
     return this.http
       .post<CreateProductResponse>(`${this.API_URL}/product`, createProductRequest, this.HTTP_OPTIONS)
+      .pipe(
+        take(1),
+        catchError(this.handleError)
+      );
+  }
+
+  editProduct(editProduct: EditProductRequest): Observable<void> {
+    return this.http
+      .put<void>(`${this.API_URL}/product`, editProduct, this.HTTP_OPTIONS)
       .pipe(
         take(1),
         catchError(this.handleError)
