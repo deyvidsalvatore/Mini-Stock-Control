@@ -65,6 +65,7 @@
                   icon="pi pi-trash"
                   class="p-button-rounded p-button-danger"
                   aria-label="Delete"
+                  (click)="handleDeleteCategoryEvent(category?.id, category?.name)"
                 ></button>
               </div>
             </td>

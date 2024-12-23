@@ -5,6 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AllCategoriesResponse } from '../../../../shared/interfaces/products/responses/all-categories.response';
+import { DeleteCategoryAction } from '../../../../shared/interfaces/categories/delete-category.action';
 
 @Component({
   selector: 'app-categories',
@@ -52,6 +53,51 @@ export class CategoriesComponent implements OnInit, OnDestroy {
           this.router.navigate(['/dashboard']);
         }
       });
+  }
+
+  handleDeleteCategory(event: DeleteCategoryAction): void {
+    if (event) {
+      this.confirmationService.confirm({
+        message: `You want to delete category ${event?.categoryName}`,
+        header: 'Category Deletion Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Confirm',
+        rejectLabel: 'Cancel',
+        accept: () => this.deleteCategory(event?.category_id)
+      })
+    }
+  }
+
+  deleteCategory(category_id: string): void {
+    if (category_id) {
+      this.categoriesService
+        .deleteCategory({ category_id })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Category was removed successfully!',
+              life: 3000,
+            });
+            this.getAllCategories();
+            this.router.navigate(['/categories']);
+          },
+          error: (err: Error) => {
+            console.log(err);
+            this.getAllCategories();
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Error on removing an category',
+              life: 3000,
+            });
+          },
+        });
+
+      this.getAllCategories();
+    }
   }
 
 }
