@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../../environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, Observer, take } from 'rxjs';
 import { AllCategoriesResponse } from '../../shared/interfaces/products/responses/all-categories.response';
 
 @Injectable({
@@ -24,6 +24,14 @@ export class CategoriesService {
     return this.http.get<AllCategoriesResponse[]>(`${this.API_URL}/category`, this.HTTP_OPTIONS);
   }
 
+  createNewCategory(requestData: {name: string}): Observable<AllCategoriesResponse[]> {
+    return this.http.post<Array<AllCategoriesResponse>>(
+      `${this.API_URL}/category`,
+      requestData,
+      this.HTTP_OPTIONS
+    ).pipe(take(1));
+  }
+
   deleteCategory(requestData: {category_id: string}): Observable<void> {
     return this.http.delete<void>(
       `${this.API_URL}/category`,
@@ -32,7 +40,6 @@ export class CategoriesService {
           category_id: requestData?.category_id
         }
       }
-
-    )
+    ).pipe(take(1));
   }
 }

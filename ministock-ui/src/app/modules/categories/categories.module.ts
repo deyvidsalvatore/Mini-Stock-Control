@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { CategoriesTableComponent } from './pages/categories/categories-table/categories-table.component';
 import { ToolbarNavigationComponent } from "../../shared/toolbar-navigation/toolbar-navigation.component";
+import { CategoriesFormComponent } from './pages/categories/categories-form/categories-form.component';
 
 const PRIMENG_MODULES = [
   CardModule,
@@ -38,7 +39,7 @@ const PRIMENG_MODULES = [
 ];
 
 @NgModule({
-  declarations: [CategoriesComponent, CategoriesTableComponent],
+  declarations: [CategoriesComponent, CategoriesTableComponent, CategoriesFormComponent],
   imports: [
     CommonModule,
     CategoriesRoutingModule,

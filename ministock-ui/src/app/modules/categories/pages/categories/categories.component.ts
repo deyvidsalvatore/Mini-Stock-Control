@@ -1,20 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CategoriesService } from '../../../../core/services/categories.service';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AllCategoriesResponse } from '../../../../shared/interfaces/products/responses/all-categories.response';
 import { DeleteCategoryAction } from '../../../../shared/interfaces/categories/delete-category.action';
+import { EventAction } from '../../../../shared/interfaces/products/event-actions';
+import { CategoriesFormComponent } from './categories-form/categories-form.component';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss'
+  styleUrl: './categories.component.scss',
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject<void>();
   public categoriesData!: Array<AllCategoriesResponse>;
+  private ref!: DynamicDialogRef;
 
   constructor(
     private categoriesService: CategoriesService,
@@ -34,7 +37,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   getAllCategories() {
-    this.categoriesService.getAllCategories()
+    this.categoriesService
+      .getAllCategories()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -48,13 +52,31 @@ export class CategoriesComponent implements OnInit, OnDestroy {
             severity: 'error',
             summary: 'Error',
             detail: 'Error on search categories',
-            life: 2500
+            life: 2500,
           });
           this.router.navigate(['/dashboard']);
-        }
+        },
       });
   }
 
+  handleCategoryAction(event: EventAction): void {
+    if (event) {
+      this.ref = this.dialogService.open(CategoriesFormComponent, {
+        header: event?.action,
+        width: '70%',
+        contentStyle: { overflow: 'auto' },
+        baseZIndex: 1000,
+        maximizable: true,
+        data: {
+          event: event,
+        },
+      });
+
+      this.ref.onClose.pipe(takeUntil(this.destroy$)).subscribe({
+        next: () => this.getAllCategories(),
+      });
+    }
+  }
   handleDeleteCategory(event: DeleteCategoryAction): void {
     if (event) {
       this.confirmationService.confirm({
@@ -63,8 +85,8 @@ export class CategoriesComponent implements OnInit, OnDestroy {
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Confirm',
         rejectLabel: 'Cancel',
-        accept: () => this.deleteCategory(event?.category_id)
-      })
+        accept: () => this.deleteCategory(event?.category_id),
+      });
     }
   }
 
@@ -99,5 +121,4 @@ export class CategoriesComponent implements OnInit, OnDestroy {
       this.getAllCategories();
     }
   }
-
 }
