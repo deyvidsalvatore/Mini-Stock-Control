@@ -1,7 +1,7 @@
 <div>
-  <form [formGroup]="categoryForm" (ngSubmit)="handleSubmitAddCategory()">
+  <form [formGroup]="categoryForm" (ngSubmit)="handleSubmitCategoryAction()">
     <div class="card flex flex-column md:flex-column gap-3">
-      <input pInputText placeholder="Name" formControlName="name" />
+      <input pInputText placeholder="Nome" formControlName="name" />
 
       <div
         class="flex flex-row justify-content-center align-content-center align-items-center"
@@ -9,7 +9,7 @@
         <p-button
           [disabled]="!categoryForm.valid"
           type="submit"
-          label="Complete"
+          label="Concluir"
         ></p-button>
       </div>
     </div>
