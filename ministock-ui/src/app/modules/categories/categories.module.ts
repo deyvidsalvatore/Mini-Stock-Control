@@ -19,6 +19,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToastModule } from 'primeng/toast';
 import { CategoriesTableComponent } from './pages/categories/categories-table/categories-table.component';
+import { ToolbarNavigationComponent } from "../../shared/toolbar-navigation/toolbar-navigation.component";
 
 const PRIMENG_MODULES = [
   CardModule,
@@ -45,7 +46,8 @@ const PRIMENG_MODULES = [
     ReactiveFormsModule,
     SharedModule,
     PRIMENG_MODULES,
-  ],
+    ToolbarNavigationComponent
+],
   providers: [DialogService, MessageService, ConfirmationService],
 })
 export class CategoriesModule {}

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { AllCategoriesResponse } from '../../../../../shared/interfaces/products/responses/all-categories.response';
 
 @Component({
   selector: 'app-categories-table',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './categories-table.component.scss'
 })
 export class CategoriesTableComponent {
+  @Input() public categories: Array<AllCategoriesResponse> = [];
+  public categorySelected!: AllCategoriesResponse;
 
 }
