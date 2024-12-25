@@ -22,6 +22,7 @@ import { ToolbarNavigationComponent } from '../../shared/toolbar-navigation/tool
 import { ProductsTableComponent } from './products-table/products-table.component';
 import { ToastModule } from 'primeng/toast';
 import { ProductFormComponent } from './product-form/product-form.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const PRIMENG_MODULES = [
   CardModule,
@@ -51,8 +52,9 @@ const PRIMENG_MODULES = [
     FormsModule,
     ReactiveFormsModule,
     ProductsRoutingModule,
+    SharedModule,
     PRIMENG_MODULES,
-  ],
+],
   providers: [DialogService, MessageService, ConfirmationService],
 })
 export class ProductsModule {}
