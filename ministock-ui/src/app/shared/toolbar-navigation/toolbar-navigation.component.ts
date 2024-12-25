@@ -7,6 +7,8 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { ProductFormComponent } from '../../modules/products/product-form/product-form.component';
+import { ProductEvent } from '../enums/products/product.event';
 
 @Component({
   selector: 'app-toolbar-navigation',
@@ -25,7 +27,20 @@ import { CookieService } from 'ngx-cookie-service';
   providers: [DialogService, CurrencyPipe]
 })
 export class ToolbarNavigationComponent {
-  constructor(private cookie: CookieService, private router: Router) {
+  constructor(private cookie: CookieService, private router: Router, private dialogService: DialogService) {
+  }
+
+  handleSaleProduct(): void {
+    this.dialogService.open(ProductFormComponent, {
+      header: ProductEvent.SALE_PRODUCT_EVENT,
+      width: '70%',
+      contentStyle: {overflow: 'auto'},
+      baseZIndex: 1000,
+      maximizable: true,
+      data: {
+        event: { action: ProductEvent.SALE_PRODUCT_EVENT }
+      }
+    })
   }
 
   handleLogout(): void {

@@ -31,7 +31,7 @@
     <p-button
       icon="pi pi-credit-card"
       label="Make Sell"
-      [routerLink]="['/products/sales']"
+      (onClick)="handleSaleProduct()"
       routerLinkActive="exact_route"
       styleClass="bg-indigo-800 p-button-secondary"
       class="mr-2"

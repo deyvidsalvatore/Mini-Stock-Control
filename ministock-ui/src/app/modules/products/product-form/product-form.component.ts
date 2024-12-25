@@ -13,11 +13,13 @@ import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { ProductDataTransferService } from '../../../shared/services/products-data-transfer.service';
 import { ProductEvent } from '../../../shared/enums/products/product.event';
 import { EditProductRequest } from '../../../shared/interfaces/products/requests/edit-product.request';
+import { SaleProductRequest } from '../../../shared/interfaces/products/requests/sale-product.request';
 
 @Component({
   selector: 'app-product-form',
   templateUrl: './product-form.component.html',
   styleUrls: [],
+  providers: [MessageService]
 })
 export class ProductFormComponent implements OnInit, OnDestroy {
   private readonly destroy$: Subject<void> = new Subject();
@@ -36,6 +38,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     category_id: ['', Validators.required],
     amount: [0, Validators.required],
   });
+
   public editProductForm = this.formBuilder.group({
     name: ['', Validators.required],
     price: ['', Validators.required],
@@ -43,9 +46,16 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     amount: [0, Validators.required],
   });
 
+  public saleProductForm = this.formBuilder.group({
+    amount: [0, Validators.required],
+    product_id: ['', Validators.required]
+  });
+
   public addProductAction = ProductEvent.ADD_PRODUCT_EVENT;
   public editProductAction = ProductEvent.EDIT_PRODUCT_EVENT;
   public saleProductAction = ProductEvent.SALE_PRODUCT_EVENT;
+
+  public saleProductSelected!: IAllProductsResponse;
 
   constructor(
     private categoriesService: CategoriesService,
@@ -185,6 +195,46 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  handleSubmitSaleProduct(): void {
+    if (this.saleProductForm?.value && this.saleProductForm?.valid) {
+      const requestDatas: SaleProductRequest = {
+        amount: this.saleProductForm.value?.amount as number,
+        product_id: this.saleProductForm.value?.product_id as string,
+      };
+
+      this.productsService
+        .saleProduct(requestDatas)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            if (response) {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Sucesso',
+                detail: 'Venda efetuada com sucesso!',
+                life: 3000,
+              });
+              this.saleProductForm.reset();
+              this.getProductDatas();
+              this.router.navigate(['/dashboard']);
+            }
+          },
+          error: (err) => {
+            console.log(err);
+            this.saleProductForm.reset();
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao vender produto!',
+              life: 3000,
+            });
+          },
+        });
+    }
+  }
+
+
 
   getProductDatas(): void {
     this.productsService

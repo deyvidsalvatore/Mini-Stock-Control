@@ -12,6 +12,8 @@ import { DeleteProductResponse } from '../../shared/interfaces/products/response
 import { CreateProductRequest } from '../../shared/interfaces/products/requests/create-product.request';
 import { CreateProductResponse } from '../../shared/interfaces/products/responses/create-product.response';
 import { EditProductRequest } from '../../shared/interfaces/products/requests/edit-product.request';
+import { SaleProductRequest } from '../../shared/interfaces/products/requests/sale-product.request';
+import { SaleProductResponse } from '../../shared/interfaces/products/responses/sale-product.response';
 
 @Injectable({
   providedIn: 'root',
@@ -38,22 +40,22 @@ export class ProductsService {
       );
   }
 
-  createProduct(createProductRequest: CreateProductRequest): Observable<CreateProductResponse> {
+  createProduct(
+    createProductRequest: CreateProductRequest
+  ): Observable<CreateProductResponse> {
     return this.http
-      .post<CreateProductResponse>(`${this.API_URL}/product`, createProductRequest, this.HTTP_OPTIONS)
-      .pipe(
-        take(1),
-        catchError(this.handleError)
-      );
+      .post<CreateProductResponse>(
+        `${this.API_URL}/product`,
+        createProductRequest,
+        this.HTTP_OPTIONS
+      )
+      .pipe(take(1), catchError(this.handleError));
   }
 
   editProduct(editProduct: EditProductRequest): Observable<void> {
     return this.http
       .put<void>(`${this.API_URL}/product`, editProduct, this.HTTP_OPTIONS)
-      .pipe(
-        take(1),
-        catchError(this.handleError)
-      );
+      .pipe(take(1), catchError(this.handleError));
   }
   deleteProduct(productId: string): Observable<DeleteProductResponse> {
     return this.http
@@ -63,7 +65,24 @@ export class ProductsService {
           product_id: productId,
         },
       })
-      .pipe(catchError(this.handleError));
+      .pipe(take(1), catchError(this.handleError));
+  }
+
+  saleProduct(
+    requestDatas: SaleProductRequest
+  ): Observable<SaleProductResponse> {
+    return this.http
+      .post<SaleProductResponse>(
+        `${this.API_URL}/product/sale`,
+        {
+          amount: requestDatas?.amount,
+          product_id: requestDatas?.product_id,
+        },
+        {
+          ...this.HTTP_OPTIONS
+        }
+      )
+      .pipe(take(1), catchError(this.handleError));
   }
 
   private handleError(err: HttpErrorResponse): Observable<never> {
