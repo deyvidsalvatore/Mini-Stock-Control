@@ -1,0 +1,14 @@
+<p-toast></p-toast>
+<div class="grid">
+  <div class="col-12">
+    <div class="flex justify-content-center align-content-center text-align-center">
+      <p-card header="Login" subheader="Fill in your credentials">
+        <app-dynamic-form
+          [questions]="questions"
+          (formSubmitted)="onSubmit($event)"
+        ></app-dynamic-form>
+        <p>Create an account by clicking <a [routerLink]="['../signup']">here</a>.</p>
+      </p-card>
+    </div>
+  </div>
+</div>

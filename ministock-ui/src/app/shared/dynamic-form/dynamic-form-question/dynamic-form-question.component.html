@@ -1,0 +1,29 @@
+<div [formGroup]="form">
+  <label [attr.for]="question.key">{{ question.label }}</label>
+  <div [ngSwitch]="question.controlType">
+    <input
+      *ngSwitchCase="'textbox'"
+      pInputText
+      [formControlName]="question.key"
+      [id]="question.key"
+      [type]="question.type"
+      [placeholder]="question.label"
+    />
+
+    <p-dropdown
+      *ngSwitchCase="'dropdown'"
+      [options]="question.options"
+      optionLabel="value"
+      optionValue="key"
+      [formControlName]="question.key"
+      [id]="question.key"
+    ></p-dropdown>
+  </div>
+
+  <p-message
+    *ngIf="form.controls[question.key].touched && form.controls[question.key].invalid"
+    severity="error"
+    text="{{ question.label }} is required"
+  ></p-message>
+
+</div>
